@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/data
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 10
+  phpMyAdmin:
+    image: phpmyadmin:latest
+    ports:
+      - 3000:80
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+networks:
+  myNet:
+    driver: bridge
+volumes:
+  mysql_data:
+

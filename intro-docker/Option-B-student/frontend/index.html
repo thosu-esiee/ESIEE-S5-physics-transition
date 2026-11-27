@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Campus energy & carbon dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <header><h1>Campus energy & carbon dashboard</h1><p>Teaching data — not measured emissions</p></header>
+    <section class="summary"><div><span>Total electricity</span><strong id="total-kwh">…</strong></div>
+      <div><span>Estimated emissions</span><strong id="total-carbon">…</strong></div></section>
+    <h2>Electricity consumption by building and day</h2>
+    <p id="status" role="status">Loading measurements…</p>
+    <table><thead><tr><th>Date</th><th>Building</th><th>Consumption (kWh)</th>
+      <th>Factor (kg CO₂e/kWh)</th><th>Emissions (kg CO₂e)</th></tr></thead><tbody id="rows"></tbody></table>
+    <p class="note">All emission factors are fictional teaching examples; real values depend on location, period, and calculation scope.</p>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

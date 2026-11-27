@@ -1,0 +1,79 @@
+# TODO: Define exactly three services named web, api, mysql.
+# TODO: Build web and api from the provided Dockerfiles.
+# TODO: Publish only web: 127.0.0.1:8080:80.
+# TODO: Networks web_net (web + api), data_net (api + mysql, internal: true).
+# TODO: Named volume mysql_data mounted at /var/lib/mysql.
+# TODO: Mount database/init.sql under /docker-entrypoint-initdb.d/ (read-only).
+# TODO: MySQL env: MYSQL_DATABASE=energy_lab, MYSQL_USER=energy_user,
+#       MYSQL_ROOT_PASSWORD_FILE, MYSQL_PASSWORD_FILE.
+# TODO: API env DB_HOST=mysql, DB_NAME=energy_lab, DB_USER=energy_user,
+#       DB_PASSWORD_FILE, and the matching secret file.
+# TODO: MySQL healthcheck and api depends_on service_healthy.
+# Example secret file paths: ./secrets/mysql-root-password.txt,
+#                             ./secrets/mysql-user-password.txt
+
+services:
+  web:
+    container_name: web-energy
+    build: ./frontend
+    ports:
+      - "8080:80"
+    networks:
+      - web_net
+    depends_on:
+      - api
+
+  api:
+    container_name: api-energy
+    build: ./backend
+    networks:
+        - web_net
+        - data_net
+    environment:
+      DB_HOST: mysql
+      DB_NAME: energy_lab
+      DB_USER: energy_user
+      DB_PASSWORD_FILE: /run/secrets/mysql_user_password
+    secrets:
+      - mysql_user_password
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    container_name: mysql-energy
+    image: mysql:latest
+    networks:
+      - data_net
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d:ro
+    environment:
+      MYSQL_DATABASE: energy_lab
+      MYSQL_USER: energy_user
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
+    healthcheck:
+      #test: mysqladmin ping
+      test: mysql --user=root --password=$(cat /run/secrets/mysql_root_password) --execute="SHOW DATABASES;"
+      interval: 5s
+    secrets:
+      - mysql_root_password
+      - mysql_user_password
+
+networks:
+  web_net:
+    driver: bridge
+  data_net:
+    driver: bridge
+    internal: true
+
+volumes:
+  mysql_data:
+    
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql-root-password.txt
+  mysql_user_password:
+    file: ./secrets/mysql-user-password.txt
+

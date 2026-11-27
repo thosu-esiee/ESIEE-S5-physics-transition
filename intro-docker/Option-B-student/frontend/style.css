@@ -1,0 +1,12 @@
+:root {font: 16px system-ui, sans-serif; color:#19313b; background:#f6faf9}
+main {max-width:970px; margin:3em auto; padding:0 1em}
+header {border-bottom:3px solid #177e76; margin-bottom:1.5em}
+header h1 {margin-bottom:0.1em} header p,.note {color:#537078}
+.summary {display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1em}
+.summary div {background:white;padding:1.2em;border:1px solid #b8d9d1;border-radius:9px}
+.summary span {display:block;margin-bottom:0.3em}
+.summary strong {font-size:1.9em}
+table {background:white;width:100%;border-collapse:collapse;margin:1em 0}
+th,td {text-align:left;border-bottom:1px solid #d7e5e2;padding:.7em .5em}
+th {background:#e3f3ef}
+@media(max-width:640px) {table {font-size:.78em} th,td {padding:.4em .2em}}

@@ -1,0 +1,10 @@
+services:
+  hello:
+    image: nodered/node-red:latest-minimal
+    ports:
+      - "2000:1880"
+    volumes:
+      - save_nodered_data:/data
+volumes:
+  save_nodered_data:
+
